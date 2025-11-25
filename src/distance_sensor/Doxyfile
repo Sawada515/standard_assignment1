@@ -1,0 +1,12 @@
+PROJECT_NAME           = "queue"
+OUTPUT_DIRECTORY       = ./docs
+INPUT                  = ./queue
+FILE_PATTERNS          = *.c *.h
+RECURSIVE              = YES
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+EXTRACT_ALL            = YES
+HAVE_DOT               = YES      # Graphvizを使った図を生成
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+
