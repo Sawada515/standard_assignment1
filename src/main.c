@@ -132,8 +132,7 @@ RE_CONNECT_PIGPIO_DAEMON:
 		printf("dis %lf\n", distance_sensor4);
 #endif
 
-		shm_write(shm_data, r_duty, l_duty, direction, angle, \
-			distance_sensor1, distance_sensor2, distance_sensor3, distance_sensor4);
+		shm_write_sensor_value(shm_data, distance_sensor1, distance_sensor2, distance_sensor3, distance_sensor4);
 
 		shm_read(shm_data, &r_duty, &l_duty, (unsigned char*)&direction, &angle, NULL, NULL, NULL, NULL);
 
