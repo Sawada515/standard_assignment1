@@ -88,6 +88,32 @@ shm_write(void *shm_addr,
 #endif
 }
 
+void
+shm_write_sensor_value(void *shm_addr,
+          double distance_sensor1,
+          double distance_sensor2,
+          double distance_sensor3,
+          double distance_sensor4)
+{
+        data_packet_t tmp = { 0 };
+
+        memcpy(&tmp, shm_addr, sizeof(tmp));
+
+        tmp.distance_sensor1 = distance_sensor1;
+        tmp.distance_sensor2 = distance_sensor2;
+        tmp.distance_sensor3 = distance_sensor3;
+        tmp.distance_sensor4 = distance_sensor4;
+
+        memcpy(shm_addr, &tmp, sizeof(tmp));
+
+#ifdef DEBUG
+        printf("c %lf\n", tmp.distance_sensor1);
+        printf("c %lf\n", tmp.distance_sensor2);
+        printf("c %lf\n", tmp.distance_sensor3);
+        printf("c %lf\n", tmp.distance_sensor4);
+#endif
+}
+
 void 
 shm_write_motor_data(void *shm_addr,
 	  uint8_t r_duty,
