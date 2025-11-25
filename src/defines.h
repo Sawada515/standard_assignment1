@@ -99,5 +99,12 @@ shm_read(void *shm_addr,
 	 double *distance_sensor3,
 	 double *distance_sensor4);
 
+void
+shm_write_sensor_value(void *shm_addr,
+          double distance_sensor1,
+          double distance_sensor2,
+          double distance_sensor3,
+          double distance_sensor4);
+
 #endif
 
