@@ -75,21 +75,21 @@ def calc_direction(angle):
     # angle: 0-360 (degree)
     if angle == 0:
         return Direction["STOP"]["code"]
-    if (1 <= angle < 30) or (330 <= angle < 360):
+    if (1 <= angle < 20) or (350 <= angle < 360):
         return Direction["RIGHT_TURN"]["code"]
-    if 30 <= angle < 75:
+    if 20 <= angle < 75:
         return Direction["RIGHT_FRONT"]["code"]
     if 75 <= angle < 105:
         return Direction["FORWARD"]["code"]
-    if 105 <= angle < 150:
+    if 105 <= angle < 170:
         return Direction["LEFT_FRONT"]["code"]
-    if 150 <= angle < 210:
+    if 170 <= angle < 190:
         return Direction["LEFT_TURN"]["code"]
-    if 210 <= angle < 255:
+    if 190 <= angle < 255:
         return Direction["LEFT_REAR"]["code"]
     if 255 <= angle < 285:
         return Direction["BACK"]["code"]
-    if 285 <= angle < 330:
+    if 285 <= angle < 350:
         return Direction["RIGHT_REAR"]["code"]
 
     return Direction["STOP"]["code"]
