@@ -39,9 +39,9 @@ return r_duty, l_duty direction
 '''
 def calc_duty_and_direction(x, y):
     """ジョイスティック座標 (x,y) から左右モータデューティと方向コードを返す"""
-    radius = calc_radius(x, y)
-    if radius == 0:
-        return 0, 0, Direction["STOP"]["code"]
+#    radius = calc_radius(x, y)
+#    if radius == 0:
+#        return 0, 0, Direction["STOP"]["code"]
 
     r_duty, l_duty = calc_duty(x, y)
     angle = calc_angle(x, y)
@@ -49,15 +49,11 @@ def calc_duty_and_direction(x, y):
 
     # ここではデューティを整数(0-100)に丸める
     try:
-        r_int = int(round(r_duty))
-        l_int = int(round(l_duty))
+        r_int = int(round(abs(r_duty)))
+        l_int = int(round(abs(l_duty)))
     except Exception:
         r_int = 0
         l_int = 0
-
-    # clamp
-    r_int = max(0, min(100, r_int))
-    l_int = max(0, min(100, l_int))
 
     return r_int, l_int, direction
 
@@ -73,11 +69,9 @@ def calc_angle(x, y):
 
 def calc_direction(angle):
     # angle: 0-360 (degree)
-    if angle == 0:
-        return Direction["STOP"]["code"]
-    if (1 <= angle < 20) or (350 <= angle < 360):
+    if (0 <= angle < 10) or (350 <= angle < 360):
         return Direction["RIGHT_TURN"]["code"]
-    if 20 <= angle < 75:
+    if 10 <= angle < 75:
         return Direction["RIGHT_FRONT"]["code"]
     if 75 <= angle < 105:
         return Direction["FORWARD"]["code"]
@@ -95,14 +89,17 @@ def calc_direction(angle):
     return Direction["STOP"]["code"]
 
 def calc_duty(x, y):
-    radius = calc_radius(x, y)
-    angle = calc_angle(x, y)
+#    radius = calc_radius(x, y)
+#    angle = calc_angle(x, y)
 
-    forward = np.cos(np.radians(angle)) * radius
-    turn = np.sin(np.radians(angle)) * radius
+#    forward = np.cos(np.radians(angle)) * radius
+#    turn = np.sin(np.radians(angle)) * radius
 
-    r_duty = forward + turn
-    l_duty = forward - turn
+#    r_duty = forward + turn
+#    l_duty = forward - turn
+
+    r_duty = y + x
+    l_duty = y - x
 
     return r_duty, l_duty
 
@@ -236,14 +233,17 @@ def handle_client(conn):
                 # JSONとして返信する
                 conn.send((json.dumps(response) + "\n").encode())
                 last_send_check_time = time.time()
+    
+            time.sleep(0.1)
 
         except socket.timeout:
             continue
         except (ConnectionResetError, BrokenPipeError, OSError):
             print("[ERROR] Connection lost.")
-            break
 
-    conn.close()
+            server_cleanup_and_shutdown()
+
+            conn.close()
 
 
 def server_cleanup_and_shutdown():
@@ -254,10 +254,10 @@ def server_cleanup_and_shutdown():
         print("[INFO] System shutting down in 3 seconds...")
         time.sleep(1)
 
-        os.system("sudo shutdown -h now")
+        #os.system("sudo shutdown -h now")
     except Exception as e:
         print(f"[ERROR] Failed to shutdown: {e}")
-    finally:    #意味わからん なぜshutdownするのにfinalyがあるのか
+    finally:    
         sys.exit(0)
 
 
@@ -316,6 +316,8 @@ def main():
 
     ctypes_init()
 
+    time.sleep(0.5);
+
     shm_addr = libc.c_py_shm_open()
     if not shm_addr:
         print("shm Open Error")
@@ -333,11 +335,9 @@ def main():
 
         finally:
             try:
-                os.kill(int(p1.pid), signal.SIGINT)
-                os.kill(int(p2.pid), signal.SIGKILL)
+                #os.kill(int(p1.pid), signal.SIGINT)
+                #os.kill(int(p2.pid), signal.SIGKILL)
                 server.close()
-
-                server_cleanup_and_shutdown()
 
             except:
                 pass
